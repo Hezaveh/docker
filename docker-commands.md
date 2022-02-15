@@ -22,6 +22,10 @@ docker build -t my-app:1.0 .
 
 #env
 
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 044545860366.dkr.ecr.us-east-1.amazonaws.com
+
+docker build -t my-app:1.3 .
+
 docker tag my-app:1.3 044545860366.dkr.ecr.us-east-1.amazonaws.com/my-app:1.3
 
 docker push 044545860366.dkr.ecr.us-east-1.amazonaws.com/my-app:1.3
