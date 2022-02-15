@@ -1,17 +1,19 @@
-FROM node:13-alpine
+FROM jenkins/jenkins:lts
 
-ENV MONGO_DB_USERNAME=admin \
-    MONGO_DB_PWD=password
+USER root
 
-RUN mkdir -p /home/app
+# prerequisites for docker
+RUN apt-get update \
+    && apt-get -y install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        software-properties-common
 
-COPY ./app /home/app
+# docker
+RUN curl https://get.docker.com/ > dockerinstall && chmod 777 dockerinstall && ./dockerinstall
 
-# set default dir so that next commands executes in /home/app dir
-WORKDIR /home/app
+# docker-compose
+RUN curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose \
+    && chmod +x /usr/local/bin/docker-compose
 
-# will execute npm install in /home/app because of WORKDIR
-RUN npm install
-
-# no need for /home/app/server.js because of WORKDIR
-CMD ["node", "server.js"]
